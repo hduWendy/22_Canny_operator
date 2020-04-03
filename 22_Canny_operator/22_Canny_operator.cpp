@@ -15,22 +15,15 @@ int main()
 	cv::Mat out1_Mat_single,out2_Mat_single;
 	Canny(srcMat_single, out2_Mat_single,20,60);
 
-	cv::Mat hsvMat;
 	cv::Mat edgeX_Mat;
 	cv::Mat edgeY_Mat;
 	cv::Mat edgeX_Mat_out;
 	cv::Mat edgeY_Mat_out;
 	double scale = 0.5;
 
-	Size ResImgSiz = Size(srcMat.cols*scale, srcMat.rows*scale);
-	Mat rFrame = Mat(ResImgSiz, srcMat.type());
-	resize(srcMat, rFrame, ResImgSiz, INTER_LINEAR);
-
-	cvtColor(rFrame, hsvMat, COLOR_BGR2HSV);
-
-	Sobel(rFrame, edgeX_Mat, CV_16SC1, 1, 0, 3);
+	Sobel(srcMat_single, edgeX_Mat, CV_16SC1, 1, 0, 3);
 	convertScaleAbs(edgeX_Mat, edgeX_Mat_out);
-	Sobel(rFrame, edgeY_Mat, CV_16SC1, 0, 1, 3);
+	Sobel(srcMat_single, edgeY_Mat, CV_16SC1, 0, 1, 3);
 	convertScaleAbs(edgeY_Mat, edgeY_Mat_out);
 
 	Canny(edgeX_Mat, edgeY_Mat, out1_Mat_single, 20, 60);
