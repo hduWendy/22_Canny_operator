@@ -12,22 +12,31 @@ int main()
 	std::vector<cv::Mat> channels;
 	cv::split(srcMat, channels);
 	cv::Mat srcMat_single = channels.at(0);
-	cv::Mat out2_Mat_single;
+	cv::Mat out1_Mat_single,out2_Mat_single;
 	Canny(srcMat_single, out2_Mat_single,20,60);
 
-	int height = srcMat.rows; //行数
-	int width = srcMat.cols; //每行元素的总元素数量
-	for (int j = 0; j<height; j++)
-	{
-		for (int i = 0; i<width; i++)
-		{
-			//-----------------开始处理每个像素-----------------
-		//	Canny(i,j,);
+	cv::Mat hsvMat;
+	cv::Mat edgeX_Mat;
+	cv::Mat edgeY_Mat;
+	cv::Mat edgeX_Mat_out;
+	cv::Mat edgeY_Mat_out;
+	double scale = 0.5;
 
-			//-------------结束像素处理------------------------
-		} //单行处理结束
-	}
+	Size ResImgSiz = Size(srcMat.cols*scale, srcMat.rows*scale);
+	Mat rFrame = Mat(ResImgSiz, srcMat.type());
+	resize(srcMat, rFrame, ResImgSiz, INTER_LINEAR);
+
+	cvtColor(rFrame, hsvMat, COLOR_BGR2HSV);
+
+	Sobel(rFrame, edgeX_Mat, CV_16SC1, 1, 0, 3);
+	convertScaleAbs(edgeX_Mat, edgeX_Mat_out);
+	Sobel(rFrame, edgeY_Mat, CV_16SC1, 0, 1, 3);
+	convertScaleAbs(edgeY_Mat, edgeY_Mat_out);
+
+	Canny(edgeX_Mat, edgeY_Mat, out1_Mat_single, 20, 60);
+
 	imshow("src", srcMat_single);
+	imshow("out1", out1_Mat_single);
 	imshow("out2", out2_Mat_single);
 	//等待用户按键
 	waitKey(0);
